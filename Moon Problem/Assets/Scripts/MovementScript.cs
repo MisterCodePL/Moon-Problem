@@ -6,15 +6,13 @@ using UnityEngine;
 public class MovementScript : MonoBehaviour {
     [HideInInspector]
     public bool FacingRight = true;
-    public float MovementSpeed = 100f;
+    public float MovementSpeed = 0.25f;
     private Transform _transform;
-    private Rigidbody2D _rigidBody;
     private Animator _animator;
 
     void Start()
     {
         _transform = gameObject.GetComponent<Transform>();
-        _rigidBody = gameObject.GetComponent<Rigidbody2D>();
         _animator = gameObject.GetComponent<Animator>();
     }
     void Update()
@@ -32,7 +30,7 @@ public class MovementScript : MonoBehaviour {
 
     void Move()
     {
-        Vector3 position = _rigidBody.transform.position;
+        Vector3 position = _transform.position;
         if (Input.GetKey(KeyCode.RightArrow))
         {
             position.x += MovementSpeed;
@@ -41,8 +39,7 @@ public class MovementScript : MonoBehaviour {
         {
             position.x -= MovementSpeed;
         }
-
-        _rigidBody.transform.position = position;
+        _transform.position = position;
     }
 
     void Flip()
