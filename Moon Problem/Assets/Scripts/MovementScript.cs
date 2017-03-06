@@ -4,31 +4,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementScript : MonoBehaviour {
-    [HideInInspector]
-    public bool FacingRight = true;
-    public float MovementSpeed = 0.25f;
+    public float MovementSpeed = 0.125f;
     private Transform _transform;
     private Animator _animator;
+    private bool _facingRight = true;
 
-    void Start()
+    public void Start()
     {
         _transform = gameObject.GetComponent<Transform>();
         _animator = gameObject.GetComponent<Animator>();
     }
-    void Update()
+    public void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) && FacingRight) Flip();
-        if(Input.GetKey(KeyCode.RightArrow) && !FacingRight) Flip();
-        if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("startMoving", true);
-        if(!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("startMoving", false);
+        if (Input.GetKey(KeyCode.LeftArrow) && _facingRight) Flip();
+        if(Input.GetKey(KeyCode.RightArrow) && !_facingRight) Flip();
+        if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("move", true);
+        if(!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("move", false);
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         Move();
     }
 
-    void Move()
+    private void Move()
     {
         Vector3 position = _transform.position;
         if (Input.GetKey(KeyCode.RightArrow))
@@ -42,9 +41,9 @@ public class MovementScript : MonoBehaviour {
         _transform.position = position;
     }
 
-    void Flip()
+    private void Flip()
     {
-        FacingRight = !FacingRight;
+        _facingRight = !_facingRight;
         Vector3 scale = _transform.localScale;
         scale.x *= -1;
         _transform.localScale = scale;
