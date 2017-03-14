@@ -39,6 +39,12 @@ public class MovementScript : MonoBehaviour {
             RaycastHit2D hit = Physics2D.Raycast(position, Vector2.down, 0.001f);
             if (hit.collider != null) _canJump = true;
         }
+
+        if (collision.gameObject.tag == "Respawn")
+        {
+            Vector3 position = new Vector3(0, 0, 0);
+            _transform.position = position;
+        }
     }
 
     private void Jump()
