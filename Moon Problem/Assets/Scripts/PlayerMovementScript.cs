@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovementScript : MonoBehaviour {
     public float MovementSpeed = 0.125f;
@@ -27,7 +28,10 @@ public class PlayerMovementScript : MonoBehaviour {
     {
         Move();
         Jump();
-        Restart();
+        if (_transform.position.y < -20)
+        {
+            Restart();
+        }
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
@@ -44,6 +48,26 @@ public class PlayerMovementScript : MonoBehaviour {
         {
             Vector3 position = new Vector3(0, 0, 0);
             _transform.position = position;
+        }
+
+        if (collision.gameObject.tag == "Enemy")
+        {
+            Vector3 positionLeft = _transform.position;
+            positionLeft.y += 0.5f;
+            positionLeft.x -= 0.7f;
+            RaycastHit2D hitLeft = Physics2D.Raycast(positionLeft, Vector2.left, 0.001f);
+            if (hitLeft.collider != null && hitLeft.collider.gameObject.tag == "Enemy") Restart();
+
+            Vector3 positionRight = _transform.position;
+            positionRight.y += 0.5f;
+            positionRight.x += 0.7f;
+            RaycastHit2D hitRight = Physics2D.Raycast(positionRight, Vector2.right, 0.001f);
+            if (hitRight.collider != null && hitRight.collider.gameObject.tag == "Enemy") Restart();
+
+            Vector3 positionTop = _transform.position;
+            positionTop.y += 2.6f;
+            RaycastHit2D hitTop = Physics2D.Raycast(positionTop, Vector2.up, 0.001f);
+            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Enemy") Restart();
         }
     }
 
@@ -81,10 +105,6 @@ public class PlayerMovementScript : MonoBehaviour {
 
     private void Restart()
     {
-        if (_transform.position.y < -20)
-        {
-            Vector3 position = new Vector3(0,0);
-            _transform.position = position;
-        }
+        SceneManager.LoadScene("Demo");
     }
 }
