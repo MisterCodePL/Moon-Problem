@@ -34,9 +34,9 @@ public class PlayerMovementScript : MonoBehaviour {
         }
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Collide")
+        if (collision.gameObject.tag == "Ground")
         {
             Vector3 position= _transform.position;
             position.y -= 0.1f;
@@ -46,8 +46,7 @@ public class PlayerMovementScript : MonoBehaviour {
 
         if (collision.gameObject.tag == "Respawn")
         {
-            Vector3 position = new Vector3(0, 0, 0);
-            _transform.position = position;
+            Restart();
         }
 
         if (collision.gameObject.tag == "Enemy")

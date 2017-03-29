@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SpiderMovementScript : MonoBehaviour {
 
@@ -9,26 +7,72 @@ public class SpiderMovementScript : MonoBehaviour {
     private Animator _animator;
     private Collider2D _collider2D;
     public bool FacingRight = false;
-    // Use this for initialization
-    void Start ()
+    public void Start ()
     {
         _transform = gameObject.GetComponent<Transform>();
         _animator = gameObject.GetComponent<Animator>();
         _collider2D = gameObject.GetComponent<Collider2D>();
     }
 	
-	// Update is called once per frame
-	void FixedUpdate()
+	public void FixedUpdate()
     {
         Move();
-        if (_collider2D.isTrigger)
+        PhysicalElementOfDeathAnimation();
+    }
+
+    public void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
         {
-            Vector2 vector = new Vector2(0.125f/2,0.125f/2);
-            _transform.Rotate(vector,5f);
+            Vector3 position = _transform.position;
+            position.y += 1f;
+            RaycastHit2D hitTop = Physics2D.Raycast(position, Vector2.up, 0.0001f);
+            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
+            position.x += 1f;
+            hitTop = Physics2D.Raycast(position, Vector2.up, 0.0001f);
+            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
+            position.x -= 2f;
+            hitTop = Physics2D.Raycast(position, Vector2.up, 0.0001f);
+            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
         }
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Ground")
+        {
+            Vector3 position = _transform.position;
+            position.y += 1f;
+            position.x -= 2f;
+            RaycastHit2D hitLeft = Physics2D.Raycast(position, Vector2.left, 0.001f);
+            if (hitLeft.collider != null && hitLeft.collider.gameObject.tag == "Ground") Flip();
+            position.x += 4f;
+            RaycastHit2D hitRight = Physics2D.Raycast(position, Vector2.right, 0.001f);
+            if (hitRight.collider != null && hitRight.collider.gameObject.tag == "Ground") Flip();
+        }
+    }
+
+
+    private void PhysicalElementOfDeathAnimation()
+    {
+        RotateSpiderGameObject();
+        SpiderGameobjectDestroy();
+    }
+
+    private void SpiderGameobjectDestroy()
+    {
         if (_transform.position.y <= -5f)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void RotateSpiderGameObject()
+    {
+        if (_collider2D.isTrigger)
+        {
+            Vector2 vector = new Vector2(0.125f / 2, 0.125f / 2);
+            _transform.Rotate(vector, 5f);
         }
     }
 
@@ -54,42 +98,18 @@ public class SpiderMovementScript : MonoBehaviour {
         _transform.position = position;
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    private void Die()
     {
-        if (collision.gameObject.tag == "Collide")
-        {
-            Vector3 position = _transform.position;
-            position.y += 1f;
-            position.x -= 2f;
-            RaycastHit2D hitLeft = Physics2D.Raycast(position, Vector2.left, 0.001f);
-            if (hitLeft.collider != null && hitLeft.collider.gameObject.tag != "Player") Flip();
-            position.x += 4f;
-            RaycastHit2D hitRight = Physics2D.Raycast(position, Vector2.right, 0.001f);
-            if (hitRight.collider != null && hitRight.collider.gameObject.tag != "Player") Flip();
-        }
-
-        if (collision.gameObject.tag == "Player")
-        {
-            Vector3 position = _transform.position;
-            position.y += 3f;
-            RaycastHit2D hitTop = Physics2D.Raycast(position, Vector2.up, 0.001f);
-            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
-            position.x += 1f;
-            hitTop = Physics2D.Raycast(position, Vector2.up, 0.001f);
-            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
-            position.x -= 2f;
-            hitTop = Physics2D.Raycast(position, Vector2.up, 0.001f);
-            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
-        }
+        DeathAnimation();
+        _collider2D.isTrigger = true;
     }
 
-    private void Die()
+    private void DeathAnimation()
     {
         _animator.SetTrigger("isDeath");
         Vector3 scale = _transform.localScale;
         scale.x *= 0.5f;
         scale.y *= 0.5f;
         _transform.localScale = scale;
-        _collider2D.isTrigger = true;
     }
 }
