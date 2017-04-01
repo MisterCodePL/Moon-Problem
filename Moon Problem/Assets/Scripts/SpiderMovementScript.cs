@@ -22,18 +22,11 @@ public class SpiderMovementScript : MonoBehaviour {
 
     public void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if (collision.gameObject.tag == "Player")
         {
-            Vector3 position = _transform.position;
-            position.y += 1f;
-            RaycastHit2D hitTop = Physics2D.Raycast(position, Vector2.up, 0.0001f);
-            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
-            position.x += 1f;
-            hitTop = Physics2D.Raycast(position, Vector2.up, 0.0001f);
-            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
-            position.x -= 2f;
-            hitTop = Physics2D.Raycast(position, Vector2.up, 0.0001f);
-            if (hitTop.collider != null && hitTop.collider.gameObject.tag == "Player") Die();
+            var collisionDetector = new CollisionDetector(_collider2D);
+            if (collisionDetector.CollideOnTheTop() != null && 
+                collisionDetector.CollideOnTheTop().gameObject.tag == "Player") Die();
         }
     }
 
@@ -41,14 +34,11 @@ public class SpiderMovementScript : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Ground")
         {
-            Vector3 position = _transform.position;
-            position.y += 1f;
-            position.x -= 2f;
-            RaycastHit2D hitLeft = Physics2D.Raycast(position, Vector2.left, 0.001f);
-            if (hitLeft.collider != null && hitLeft.collider.gameObject.tag == "Ground") Flip();
-            position.x += 4f;
-            RaycastHit2D hitRight = Physics2D.Raycast(position, Vector2.right, 0.001f);
-            if (hitRight.collider != null && hitRight.collider.gameObject.tag == "Ground") Flip();
+            var collisionDetector = new CollisionDetector(_collider2D);
+            if (collisionDetector.CollideOnTheLeft() != null &&
+                collisionDetector.CollideOnTheLeft().gameObject.tag == "Ground") Flip();
+            if (collisionDetector.CollideOnTheRight() != null && 
+                collisionDetector.CollideOnTheRight().gameObject.tag == "Ground") Flip();
         }
     }
 
