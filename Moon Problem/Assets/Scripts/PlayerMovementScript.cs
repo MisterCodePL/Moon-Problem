@@ -38,11 +38,9 @@ public class PlayerMovementScript : MonoBehaviour {
 
     public void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Ground")
-        {
-            var collisionDetector = new CollisionDetector(_collider2D);
-            if (collisionDetector.CollideOnTheBottom() != null) _canJump = true;
-        }
+
+        var collisionDetector = new CollisionDetector(_collider2D);
+        if (collisionDetector.CollideOnTheBottom() != null) _canJump = true;
 
         if (collision.gameObject.tag == "Respawn")
         {
@@ -51,7 +49,6 @@ public class PlayerMovementScript : MonoBehaviour {
 
         if (collision.gameObject.tag == "Enemy")
         {
-            var collisionDetector = new CollisionDetector(_collider2D);
             if (collisionDetector.CollideOnTheLeft() != null && 
                 collisionDetector.CollideOnTheLeft().gameObject.tag == "Enemy") Restart();
 
@@ -68,6 +65,10 @@ public class PlayerMovementScript : MonoBehaviour {
         if (Input.GetKey(KeyCode.Space) && _canJump)
         {
             _rigidbody2D.AddForce(transform.up*JumpForce,ForceMode2D.Impulse);
+            var velocity = _rigidbody2D.velocity;
+            if(velocity.y>10) velocity.y = 10;
+            _rigidbody2D.velocity = velocity;
+            //TODO: FixBugWithToBigJumps
             _canJump = false;
         }
 
