@@ -76,7 +76,7 @@ public class PlayerMovementScript : MonoBehaviour {
 
     private void Move()
     {
-        Vector3 position = _transform.position;
+        var position = _transform.position;
         if (Input.GetKey(KeyCode.RightArrow))
         {
             position.x += MovementSpeed;
@@ -91,12 +91,12 @@ public class PlayerMovementScript : MonoBehaviour {
     private void Flip()
     {
         _facingRight = !_facingRight;
-        Vector3 scale = _transform.localScale;
+        var scale = _transform.localScale;
         scale.x *= -1;
         _transform.localScale = scale;
     }
 
-    private void Restart()
+    public void Restart()
     {
         SceneManager.LoadScene("Demo");
     }

@@ -73,14 +73,14 @@ public class CyclonScript : MonoBehaviour
     private void Flip()
     {
         FacingRight = !FacingRight;
-        Vector3 scale = _transform.localScale;
+        var scale = _transform.localScale;
         scale.x *= -1;
         _transform.localScale = scale;
     }
 
     private void Move()
     {
-        Vector3 position = _transform.position;
+        var position = _transform.position;
         if (FacingRight)
         {
             position.x += _actualSpeed;
@@ -92,7 +92,7 @@ public class CyclonScript : MonoBehaviour
         _transform.position = position;
     }
 
-	void Update ()
+	void Update()
 	{
 	    _deffendModeTime+=Time.fixedDeltaTime;
 	}

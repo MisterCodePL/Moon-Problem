@@ -14,7 +14,7 @@ public class CameraMovementScript : MonoBehaviour
 
 	void LateUpdate ()
 	{
-	    Vector3 position = _transform.position;
+	    var position = _transform.position;
 	    position.x = PlayerTransform.position.x;
 	    if (PlayerTransform.position.y - position.y > MaxVerticalOffset)
 	    {

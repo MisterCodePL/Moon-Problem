@@ -61,7 +61,7 @@ public class SpiderMovementScript : MonoBehaviour {
     {
         if (_collider2D.isTrigger)
         {
-            Vector2 vector = new Vector2(0.125f / 2, 0.125f / 2);
+            var vector = new Vector2(0.125f / 2, 0.125f / 2);
             _transform.Rotate(vector, 5f);
         }
     }
@@ -69,14 +69,14 @@ public class SpiderMovementScript : MonoBehaviour {
     private void Flip()
     {
         FacingRight = !FacingRight;
-        Vector3 scale = _transform.localScale;
+        var scale = _transform.localScale;
         scale.x *= -1;
         _transform.localScale = scale;
     }
 
     private void Move()
     {
-        Vector3 position = _transform.position;
+        var position = _transform.position;
         if (FacingRight)
         {
             position.x += MovementSpeed;
@@ -96,7 +96,7 @@ public class SpiderMovementScript : MonoBehaviour {
 
     private void DeathAnimation()
     {
-        Vector3 scale = _transform.localScale;
+        var scale = _transform.localScale;
         scale.x *= 0.5f;
         scale.y *= 0.5f;
         _transform.localScale = scale;
