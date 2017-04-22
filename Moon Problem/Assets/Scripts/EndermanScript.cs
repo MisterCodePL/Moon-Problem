@@ -8,19 +8,17 @@ public class EndermanScript : MonoBehaviour
 {
     public float MovementSpeed = 0.125f;
     private Transform _transform;
-    private Animator _animator;
     private Collider2D _collider2D;
     public bool FacingRight = false;
     public float ReloadTime = 0.5f;
     private float _actualReloadTime = 0;
-    public GameObject bulletPrefab;
+    public GameObject BulletPrefab;
     public float BulletForce = 10f;
     private GameObject _player;
 
     public void Start()
     {
         _transform = gameObject.GetComponent<Transform>();
-        _animator = gameObject.GetComponent<Animator>();
         _collider2D = gameObject.GetComponent<Collider2D>();
         _player = GameObject.Find("Player");
     }
@@ -113,7 +111,7 @@ public class EndermanScript : MonoBehaviour
         {
             _actualReloadTime = 0;
             var bullet = (GameObject)Instantiate(
-                bulletPrefab,
+                BulletPrefab,
                 StartingBooletPosition(), _transform.rotation);
 
             bullet.GetComponent<Rigidbody2D>().velocity = GetBulletForce(bullet);
