@@ -4,13 +4,11 @@ public class SpiderMovementScript : MonoBehaviour {
 
     public float MovementSpeed = 0.125f;
     private Transform _transform;
-    private Animator _animator;
     private Collider2D _collider2D;
     public bool FacingRight = false;
     public void Start ()
     {
         _transform = gameObject.GetComponent<Transform>();
-        _animator = gameObject.GetComponent<Animator>();
         _collider2D = gameObject.GetComponent<Collider2D>();
     }
 	
