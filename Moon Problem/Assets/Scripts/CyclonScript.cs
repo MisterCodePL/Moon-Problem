@@ -1,32 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CyclonScript : MonoBehaviour
+public class CyclonScript : Character
 {
-
-    private float _actualSpeed;
-    public float MovementSpeed = 0.125f;
+    public float NormalSpeed = 0.125f;
     public float DeffendModeSpeed = 0.250f;
     public float DeffendModeTime = 60f;
     private float _deffendModeTime = 0;
     public Sprite DefaultSprite;
     public Sprite DeffendSprite;
-    private Transform _transform;
     private SpriteRenderer _spriteRenderer;
-    private Collider2D _collider2D;
-    public bool FacingRight = false;
-    public void Start ()
+    public override void Start ()
     {
-        _actualSpeed = MovementSpeed;
-        _transform = gameObject.GetComponent<Transform>();
+        base.Start();
+        MovementSpeed = NormalSpeed;
         _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        _collider2D = gameObject.GetComponent<Collider2D>();
     }
 
-    public void FixedUpdate()
+    public override void FixedUpdate()
     {
-        Move();
+        base.FixedUpdate();
         if (_deffendModeTime >= DeffendModeTime)
         {
             BackToDefaultMode();
@@ -37,14 +29,14 @@ public class CyclonScript : MonoBehaviour
     private void BackToDefaultMode()
     {
         _spriteRenderer.sprite = DefaultSprite;
-        _actualSpeed = MovementSpeed;
+        MovementSpeed = NormalSpeed;
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Ground")
         {
-            var collisionDetector = new CollisionDetector(_collider2D);
+            var collisionDetector = new CollisionDetector(Collider2D);
             if (collisionDetector.CollideOnTheLeft() != null &&
                 collisionDetector.CollideOnTheLeft().gameObject.tag == "Ground") Flip();
             if (collisionDetector.CollideOnTheRight() != null &&
@@ -56,7 +48,7 @@ public class CyclonScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            var collisionDetector = new CollisionDetector(_collider2D);
+            var collisionDetector = new CollisionDetector(Collider2D);
             if (collisionDetector.CollideOnTheTop() != null && 
                 collisionDetector.CollideOnTheTop().gameObject.tag == "Player") DeffendMove();
         }
@@ -65,41 +57,23 @@ public class CyclonScript : MonoBehaviour
     private void DeffendMove()
     {
         _spriteRenderer.sprite = DeffendSprite;
-        _actualSpeed = DeffendModeSpeed;
+        MovementSpeed = DeffendModeSpeed;
         _deffendModeTime = 0;
     }
 
-
-    private void Flip()
+    protected override bool IsMoving()
     {
-        FacingRight = !FacingRight;
-        var scale = _transform.localScale;
-        scale.x *= -1;
-        _transform.localScale = scale;
+        return true;
     }
 
-    private void Move()
-    {
-        var position = _transform.position;
-        if (FacingRight)
-        {
-            position.x += _actualSpeed;
-        }
-        if (!FacingRight)
-        {
-            position.x -= _actualSpeed;
-        }
-        _transform.position = position;
-    }
-
-	void Update()
+    public void Update()
 	{
 	    _deffendModeTime+=Time.fixedDeltaTime;
 	}
 
     private void Die()
     {
-        if (_transform.position.y <= -5f)
+        if (Transform.position.y <= -5f)
         {
             Destroy(gameObject);
         }

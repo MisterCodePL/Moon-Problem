@@ -1,36 +1,32 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PlayerMovementScript : MonoBehaviour {
-    public float MovementSpeed = 0.125f;
+public class PlayerMovementScript : Character {
+
     public float JumpForce = 12.5f;
-    private Transform _transform;
     private Animator _animator;
     private Rigidbody2D _rigidbody2D;
-    private bool _facingRight = true;
     private bool _canJump = true;
-    private Collider2D _collider2D;
 
-    public void Start()
+    public override void Start()
     {
-        _transform = gameObject.GetComponent<Transform>();
+        base.Start();
         _animator = gameObject.GetComponent<Animator>();
         _rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
-        _collider2D = gameObject.GetComponent<Collider2D>();
     }
     public void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) && _facingRight) Flip();
-        if(Input.GetKey(KeyCode.RightArrow) && !_facingRight) Flip();
+        if (Input.GetKey(KeyCode.LeftArrow) && FacingRight) Flip();
+        if(Input.GetKey(KeyCode.RightArrow) && !FacingRight) Flip();
         if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("move", true);
         if(!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("move", false);
     }
 
-    public void FixedUpdate()
+    public override void FixedUpdate()
     {
-        Move();
+        base.FixedUpdate();
         Jump();
-        if (_transform.position.y < -20)
+        if (Transform.position.y < -20)
         {
             Restart();
         }
@@ -39,7 +35,7 @@ public class PlayerMovementScript : MonoBehaviour {
     public void OnCollisionStay2D(Collision2D collision)
     {
 
-        var collisionDetector = new CollisionDetector(_collider2D);
+        var collisionDetector = new CollisionDetector(Collider2D);
         if (collisionDetector.CollideOnTheBottom() != null) _canJump = true;
 
         if (collision.gameObject.tag == "Respawn")
@@ -74,26 +70,9 @@ public class PlayerMovementScript : MonoBehaviour {
 
     }
 
-    private void Move()
+    protected override bool IsMoving()
     {
-        var position = _transform.position;
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            position.x += MovementSpeed;
-        }
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            position.x -= MovementSpeed;
-        }
-        _transform.position = position;
-    }
-
-    private void Flip()
-    {
-        _facingRight = !_facingRight;
-        var scale = _transform.localScale;
-        scale.x *= -1;
-        _transform.localScale = scale;
+        return Input.GetKey(KeyCode.RightArrow) ^ Input.GetKey(KeyCode.LeftArrow);
     }
 
     public void Restart()

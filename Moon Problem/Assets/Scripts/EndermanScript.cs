@@ -1,40 +1,28 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class EndermanScript : MonoBehaviour
+public class EndermanScript : Character
 {
-    public float MovementSpeed = 0.125f;
-    private Transform _transform;
-    private Collider2D _collider2D;
-    public bool FacingRight = false;
     public float ReloadTime = 0.5f;
     private float _actualReloadTime = 0;
     public GameObject BulletPrefab;
     public float BulletForce = 10f;
     private GameObject _player;
 
-    public void Start()
+    public override void Start()
     {
-        _transform = gameObject.GetComponent<Transform>();
-        _collider2D = gameObject.GetComponent<Collider2D>();
+        base.Start();
         _player = GameObject.Find("Player");
     }
 
-    public void FixedUpdate()
+    public override void FixedUpdate()
     {
-        Move();
+        base.FixedUpdate();
         PhysicalElementOfDeathAnimation();
     }
 
-    private void Move()
+    protected override bool IsMoving()
     {
-        var position = _transform.position;
-        if(FacingRight) position.x += MovementSpeed;
-        if (!FacingRight) position.x -= MovementSpeed;
-        _transform.position = position;
+        return true;
     }
 
     private void PhysicalElementOfDeathAnimation()
@@ -45,7 +33,7 @@ public class EndermanScript : MonoBehaviour
 
     private void DestroyGameObject()
     {
-        if (_transform.position.y <= -5f)
+        if (Transform.position.y <= -5f)
         {
             Destroy(gameObject);
         }
@@ -53,10 +41,10 @@ public class EndermanScript : MonoBehaviour
 
     private void RotateGameObject()
     {
-        if (_collider2D.isTrigger)
+        if (Collider2D.isTrigger)
         {
             var vector = new Vector2(0.125f / 2, 0.125f / 2);
-            _transform.Rotate(vector, 5f);
+            Transform.Rotate(vector, 5f);
         }
     }
 
@@ -64,7 +52,7 @@ public class EndermanScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground")
         {
-            var collisionDetector = new CollisionDetector(_collider2D);
+            var collisionDetector = new CollisionDetector(Collider2D);
             if (collisionDetector.CollideOnTheLeft() != null &&
                 collisionDetector.CollideOnTheLeft().gameObject.tag == "Ground") Flip();
             if (collisionDetector.CollideOnTheRight() != null &&
@@ -72,19 +60,11 @@ public class EndermanScript : MonoBehaviour
         }
     }
 
-    private void Flip()
-    {
-        FacingRight = !FacingRight;
-        var scale = _transform.localScale;
-        scale.x *= -1;
-        _transform.localScale = scale;
-    }
-
     public void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            var collisionDetector = new CollisionDetector(_collider2D);
+            var collisionDetector = new CollisionDetector(Collider2D);
             if (collisionDetector.CollideOnTheTop() != null &&
                 collisionDetector.CollideOnTheTop().gameObject.tag == "Player") Die();
         }
@@ -93,26 +73,26 @@ public class EndermanScript : MonoBehaviour
     private void Die()
     {
         DeathAnimation();
-        _collider2D.isTrigger = true;
+        Collider2D.isTrigger = true;
     }
 
     private void DeathAnimation()
     {
-        var scale = _transform.localScale;
+        var scale = Transform.localScale;
         scale.x *= 0.5f;
         scale.y *= 0.5f;
-        _transform.localScale = scale;
+        Transform.localScale = scale;
     }
 
     public void Update()
     {
         _actualReloadTime += Time.fixedDeltaTime;
-        if (_actualReloadTime >= ReloadTime && !_collider2D.isTrigger && IsPlayerInFrontOf())
+        if (_actualReloadTime >= ReloadTime && !Collider2D.isTrigger && IsPlayerInFrontOf())
         {
             _actualReloadTime = 0;
             var bullet = (GameObject)Instantiate(
                 BulletPrefab,
-                StartingBooletPosition(), _transform.rotation);
+                StartingBooletPosition(), Transform.rotation);
 
             bullet.GetComponent<Rigidbody2D>().velocity = GetBulletForce(bullet);
             Destroy(bullet, 2.0f);
@@ -121,10 +101,10 @@ public class EndermanScript : MonoBehaviour
 
     private Vector3 StartingBooletPosition()
     {
-        var position = _transform.position;
-        position.y += _collider2D.bounds.extents.y*1.75f;
-        if (FacingRight) position.x += _collider2D.bounds.extents.x + 0.5f;
-        else position.x -= _collider2D.bounds.extents.x + 0.5f;
+        var position = Transform.position;
+        position.y += Collider2D.bounds.extents.y*1.75f;
+        if (FacingRight) position.x += Collider2D.bounds.extents.x + 0.5f;
+        else position.x -= Collider2D.bounds.extents.x + 0.5f;
         return position;
     }
 
@@ -138,8 +118,8 @@ public class EndermanScript : MonoBehaviour
     {
         var playerPosition = _player.transform.position;
         var playerBounds = _player.GetComponent<Collider2D>().bounds;
-        var endermanPosition = _transform.position;
-        var endermanBounds = _collider2D.bounds;
+        var endermanPosition = Transform.position;
+        var endermanBounds = Collider2D.bounds;
         var isOnTheSameVerticalPosition =
             (playerPosition.y > endermanPosition.y && playerPosition.y < endermanPosition.y + endermanBounds.max.y) ||
             (playerPosition.y + playerBounds.max.y > endermanPosition.y && playerPosition.y + playerBounds.max.y <

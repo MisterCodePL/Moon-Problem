@@ -1,20 +1,10 @@
 ﻿using UnityEngine;
 
-public class SpiderMovementScript : MonoBehaviour {
-
-    public float MovementSpeed = 0.125f;
-    private Transform _transform;
-    private Collider2D _collider2D;
-    public bool FacingRight = false;
-    public void Start ()
+public class SpiderMovementScript : Character
+{	
+	public override void FixedUpdate()
     {
-        _transform = gameObject.GetComponent<Transform>();
-        _collider2D = gameObject.GetComponent<Collider2D>();
-    }
-	
-	public void FixedUpdate()
-    {
-        Move();
+        base.FixedUpdate();
         PhysicalElementOfDeathAnimation();
     }
 
@@ -22,7 +12,7 @@ public class SpiderMovementScript : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Player")
         {
-            var collisionDetector = new CollisionDetector(_collider2D);
+            var collisionDetector = new CollisionDetector(Collider2D);
             if (collisionDetector.CollideOnTheTop() != null && 
                 collisionDetector.CollideOnTheTop().gameObject.tag == "Player") Die();
         }
@@ -32,7 +22,7 @@ public class SpiderMovementScript : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Ground")
         {
-            var collisionDetector = new CollisionDetector(_collider2D);
+            var collisionDetector = new CollisionDetector(Collider2D);
             if (collisionDetector.CollideOnTheLeft() != null &&
                 collisionDetector.CollideOnTheLeft().gameObject.tag == "Ground") Flip();
             if (collisionDetector.CollideOnTheRight() != null && 
@@ -49,7 +39,7 @@ public class SpiderMovementScript : MonoBehaviour {
 
     private void DestroyGameObject()
     {
-        if (_transform.position.y <= -5f)
+        if (Transform.position.y <= -5f)
         {
             Destroy(gameObject);
         }
@@ -57,46 +47,29 @@ public class SpiderMovementScript : MonoBehaviour {
 
     private void RotateGameObject()
     {
-        if (_collider2D.isTrigger)
+        if (Collider2D.isTrigger)
         {
             var vector = new Vector2(0.125f / 2, 0.125f / 2);
-            _transform.Rotate(vector, 5f);
+            Transform.Rotate(vector, 5f);
         }
     }
 
-    private void Flip()
+    protected override bool IsMoving()
     {
-        FacingRight = !FacingRight;
-        var scale = _transform.localScale;
-        scale.x *= -1;
-        _transform.localScale = scale;
-    }
-
-    private void Move()
-    {
-        var position = _transform.position;
-        if (FacingRight)
-        {
-            position.x += MovementSpeed;
-        }
-        if (!FacingRight)
-        {
-            position.x -= MovementSpeed;
-        }
-        _transform.position = position;
+        return true;
     }
 
     private void Die()
     {
         DeathAnimation();
-        _collider2D.isTrigger = true;
+        Collider2D.isTrigger = true;
     }
 
     private void DeathAnimation()
     {
-        var scale = _transform.localScale;
+        var scale = Transform.localScale;
         scale.x *= 0.5f;
         scale.y *= 0.5f;
-        _transform.localScale = scale;
+        Transform.localScale = scale;
     }
 }
