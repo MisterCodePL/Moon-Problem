@@ -7,6 +7,8 @@ public class PlayerMovementScript : Character {
     private Animator _animator;
     private Rigidbody2D _rigidbody2D;
     private bool _canJump = true;
+    private float _actualTimeOfCooldown = 0f;
+    public float CooldownTime;
 
     public override void Start()
     {
@@ -25,6 +27,7 @@ public class PlayerMovementScript : Character {
     public override void FixedUpdate()
     {
         base.FixedUpdate();
+        _actualTimeOfCooldown += Time.fixedDeltaTime;
         Jump();
         if (Transform.position.y < -20)
         {
@@ -35,8 +38,11 @@ public class PlayerMovementScript : Character {
     public void OnCollisionStay2D(Collision2D collision)
     {
 
-        var collisionDetector = new CollisionDetector(Collider2D);
-        if (collisionDetector.CollideOnTheBottom() != null) _canJump = true;
+        var collisionDetector = new CollisionDetector(collision);
+        if (collisionDetector.CollideOnTheBottom() != null && collisionDetector.CollideOnTheBottom().tag == "Ground")
+        {
+            _canJump = true;
+        }
 
         if (collision.gameObject.tag == "Respawn")
         {
@@ -64,8 +70,8 @@ public class PlayerMovementScript : Character {
             var velocity = _rigidbody2D.velocity;
             if(velocity.y>10) velocity.y = 10;
             _rigidbody2D.velocity = velocity;
-            //TODO: FixBugWithToBigJumps
             _canJump = false;
+            _actualTimeOfCooldown = 0;
         }
 
     }

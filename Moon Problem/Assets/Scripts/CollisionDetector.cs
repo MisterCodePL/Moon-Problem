@@ -2,90 +2,64 @@
 
 public class CollisionDetector
 {
-    private Collider2D _collider2D;
+    private Collision2D _collision2D;
 
-    public CollisionDetector(Collider2D collider2D)
+    public CollisionDetector(Collision2D collision2D)
     {
-        _collider2D = collider2D;
+        _collision2D = collision2D;
     }
 
     public Collider2D CollideOnTheLeft()
     {
-        var leftDownCorner = GetLeftDownCorner();
-        var size = GetSizeOfObject();
-
-        var oneThird = (size.y-0.2f)/3;
-        leftDownCorner.x -= 0.000001f;
-        leftDownCorner.y += 0.1f;
-        for (var i = 0; i < 3; i++)
+        Vector3 hit = _collision2D.contacts[0].normal;
+        float angle = Vector3.Angle(hit, Vector3.up);
+        if (Mathf.Approximately(angle, 90))
         {
-            if(i!=0) leftDownCorner.y += oneThird;
-            var hit = Physics2D.Raycast(leftDownCorner, Vector2.left, 0.1f);
-            if (hit.collider != null) return hit.collider;
+            Vector3 cross = Vector3.Cross(Vector3.forward, hit);
+            if (cross.y > 0)
+            {
+                return _collision2D.collider;
+            }
         }
         return null;
     }
 
     public Collider2D CollideOnTheRight()
     {
-        var leftDownCorner = GetLeftDownCorner();
-        var size = GetSizeOfObject();
-
-        var oneThird = (size.y-0.2f)/3;
-        leftDownCorner.x += 0.000001f + size.x;
-        leftDownCorner.y += 0.1f;
-        for (var i = 0; i < 3; i++)
+        Vector3 hit = _collision2D.contacts[0].normal;
+        float angle = Vector3.Angle(hit, Vector3.up);
+        if (Mathf.Approximately(angle, 90))
         {
-            if(i!=0)leftDownCorner.y += oneThird;
-            var hit = Physics2D.Raycast(leftDownCorner, Vector2.right, 0.1f);
-            if (hit.collider != null) return hit.collider;
+            Vector3 cross = Vector3.Cross(Vector3.forward, hit);
+            if (cross.y < 0)
+            {
+                return _collision2D.collider;
+            }
         }
-        
         return null;
     }
 
     public Collider2D CollideOnTheTop()
     {
-        var leftDownCorner = GetLeftDownCorner();
-        var size = GetSizeOfObject();
-
-        var oneThird = size.x / 3;
-        leftDownCorner.y += 0.1f + size.y;
-        for (var i = 0; i < 3; i++)
+        Vector3 hit = _collision2D.contacts[0].normal;
+        float angle = Vector3.Angle(hit, Vector3.up);
+        if (Mathf.Approximately(angle, 180))
         {
-            if (i != 0) leftDownCorner.x += oneThird;
-            var hit = Physics2D.Raycast(leftDownCorner, Vector2.up, 0.1f);
-            if (hit.collider != null) return hit.collider;
+            return _collision2D.collider;
         }
         return null;
     }
 
     public Collider2D CollideOnTheBottom()
     {
-        var leftDownCorner = GetLeftDownCorner();
-        var size = GetSizeOfObject();
+        Vector3 hit = _collision2D.contacts[0].normal;
+        float angle = Vector3.Angle(hit, Vector3.up);
 
-        var oneThird = size.x / 3;
-        leftDownCorner.y -= 000000.1f;
-        for (var i = 0; i < 3; i++)
+        if (Mathf.Approximately(angle, 0))
         {
-            leftDownCorner.x += oneThird;
-            var hit = Physics2D.Raycast(leftDownCorner, Vector2.down, 0.1f);
-            if (hit.collider != null) return hit.collider;
+            return _collision2D.collider;
         }
         return null;
-    }
-
-    private Vector3 GetLeftDownCorner()
-    {
-        var leftDownCorner = _collider2D.transform.position;
-        leftDownCorner.x -= _collider2D.bounds.extents.x;
-        return leftDownCorner;
-    }
-
-    private Vector3 GetSizeOfObject()
-    {
-        return _collider2D.bounds.size;
     }
 
 }

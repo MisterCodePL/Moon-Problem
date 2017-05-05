@@ -22,8 +22,7 @@ public class MineSpawnerScript : MonoBehaviour
         {
             NumberOfMines--;
             _actualDelay = 0;
-            var mine = (GameObject)Instantiate(
-                MinePrefab,GetSpawnPosition(), gameObject.transform.rotation);
+            Instantiate(MinePrefab,GetSpawnPosition(), gameObject.transform.rotation);
         }
     }
 
