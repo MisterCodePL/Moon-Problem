@@ -58,7 +58,7 @@ public class MineScript : MonoBehaviour
     private void Update()
     {
         _actualTimeToDetonate += Time.fixedDeltaTime;
-        if (_actualTimeToDetonate > 1)
+        if (_actualTimeToDetonate >= TimeToDetonate)
         {
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(_rigidbody2D.transform.position, 2.5f)
                 .Where(t => t.tag=="Player" || t.tag=="Enemy")
@@ -66,7 +66,6 @@ public class MineScript : MonoBehaviour
             
             foreach (var o in hitColliders)
             {
-                Debug.Log(o);
                 Destroy(o.gameObject);
             }
         }

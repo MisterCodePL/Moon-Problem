@@ -39,7 +39,7 @@ public class PlayerMovementScript : Character {
     {
 
         var collisionDetector = new CollisionDetector(collision);
-        if (collisionDetector.CollideOnTheBottom() != null && collisionDetector.CollideOnTheBottom().tag == "Ground")
+        if (collisionDetector.CollideOnTheBottom() != null && collisionDetector.CollideOnTheBottom().tag != "Wall")
         {
             _canJump = true;
         }
