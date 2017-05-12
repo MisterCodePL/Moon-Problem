@@ -14,14 +14,15 @@ public class CameraMovementScript : MonoBehaviour
 
 	void LateUpdate ()
 	{
+	    var canControl = PlayerTransform.gameObject.GetComponent<PlayerMovementScript>().CanControl;
 	    var position = _transform.position;
 	    position.x = PlayerTransform.position.x;
-	    if (PlayerTransform.position.y - position.y > MaxVerticalOffset)
+	    if (PlayerTransform.position.y - position.y > MaxVerticalOffset && canControl)
 	    {
             position.y += ChangingVerticalPositionPerFrame;
 	    }
 
-        if (PlayerTransform.position.y - position.y < -MaxVerticalOffset)
+        if (PlayerTransform.position.y - position.y < -MaxVerticalOffset && canControl)
         {
             position.y -= ChangingVerticalPositionPerFrame;
         }

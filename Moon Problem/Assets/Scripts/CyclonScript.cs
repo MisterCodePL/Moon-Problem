@@ -70,12 +70,4 @@ public class CyclonScript : Character
 	{
 	    _deffendModeTime+=Time.fixedDeltaTime;
 	}
-
-    private void Die()
-    {
-        if (Transform.position.y <= -5f)
-        {
-            Destroy(gameObject);
-        }
-    }
 }

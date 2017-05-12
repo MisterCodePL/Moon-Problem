@@ -9,11 +9,6 @@ public class MineSpawnerScript : MonoBehaviour
     public GameObject MinePrefab;
     private float _actualDelay = 0;
 
-	void Start ()
-    {
-		
-	}
-
     void Update()
     {
         var playerPosition = FindPlayerPosition();

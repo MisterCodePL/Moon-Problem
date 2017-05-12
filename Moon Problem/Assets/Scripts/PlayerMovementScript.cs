@@ -5,34 +5,26 @@ public class PlayerMovementScript : Character {
 
     public float JumpForce = 12.5f;
     private Animator _animator;
-    private Rigidbody2D _rigidbody2D;
     private bool _canJump = true;
-    private float _actualTimeOfCooldown = 0f;
-    public float CooldownTime;
+    public bool CanControl = true;
 
     public override void Start()
     {
         base.Start();
         _animator = gameObject.GetComponent<Animator>();
-        _rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
     }
     public void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) && FacingRight) Flip();
-        if(Input.GetKey(KeyCode.RightArrow) && !FacingRight) Flip();
-        if(Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("move", true);
+        if (Input.GetKey(KeyCode.LeftArrow) && FacingRight && CanControl) Flip();
+        if(Input.GetKey(KeyCode.RightArrow) && !FacingRight && CanControl) Flip();
+        if((Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow)) && CanControl) _animator.SetBool("move", true);
         if(!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow)) _animator.SetBool("move", false);
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
-        _actualTimeOfCooldown += Time.fixedDeltaTime;
         Jump();
-        if (Transform.position.y < -20)
-        {
-            Restart();
-        }
     }
 
     public void OnCollisionStay2D(Collision2D collision)
@@ -46,43 +38,43 @@ public class PlayerMovementScript : Character {
 
         if (collision.gameObject.tag == "Respawn")
         {
-            Restart();
+            Die();
         }
 
         if (collision.gameObject.tag == "Enemy")
         {
             if (collisionDetector.CollideOnTheLeft() != null && 
-                collisionDetector.CollideOnTheLeft().gameObject.tag == "Enemy") Restart();
+                collisionDetector.CollideOnTheLeft().gameObject.tag == "Enemy") Die();
 
             if (collisionDetector.CollideOnTheRight() != null && 
-                collisionDetector.CollideOnTheRight().gameObject.tag == "Enemy") Restart();
+                collisionDetector.CollideOnTheRight().gameObject.tag == "Enemy") Die();
 
             if (collisionDetector.CollideOnTheTop() != null && 
-                collisionDetector.CollideOnTheTop().gameObject.tag == "Enemy") Restart();
+                collisionDetector.CollideOnTheTop().gameObject.tag == "Enemy") Die();
         }
     }
 
     private void Jump()
     {
-        if (Input.GetKey(KeyCode.Space) && _canJump)
+        if (Input.GetKey(KeyCode.Space) && _canJump && CanControl)
         {
-            _rigidbody2D.AddForce(transform.up*JumpForce,ForceMode2D.Impulse);
-            var velocity = _rigidbody2D.velocity;
+            Rigidbody2D.AddForce(transform.up*JumpForce,ForceMode2D.Impulse);
+            var velocity = Rigidbody2D.velocity;
             if(velocity.y>10) velocity.y = 10;
-            _rigidbody2D.velocity = velocity;
+            Rigidbody2D.velocity = velocity;
             _canJump = false;
-            _actualTimeOfCooldown = 0;
         }
 
     }
 
     protected override bool IsMoving()
     {
-        return Input.GetKey(KeyCode.RightArrow) ^ Input.GetKey(KeyCode.LeftArrow);
+        return (Input.GetKey(KeyCode.RightArrow) ^ Input.GetKey(KeyCode.LeftArrow)) && CanControl;
     }
 
-    public void Restart()
+    public override void Die()
     {
-        SceneManager.LoadScene("Demo");
+        base.Die();
+        CanControl = false;
     }
 }

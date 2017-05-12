@@ -5,6 +5,7 @@ public abstract class Character : MonoBehaviour
     public float MovementSpeed;
     protected Transform Transform;
     protected Collider2D Collider2D;
+    protected Rigidbody2D Rigidbody2D;
     protected bool FacingRight;
 
 
@@ -12,6 +13,7 @@ public abstract class Character : MonoBehaviour
     {
         Transform = gameObject.GetComponent<Transform>();
         Collider2D = gameObject.GetComponent<Collider2D>();
+        Rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
         FacingRight = GetFacingRight();
     }
 
@@ -48,5 +50,12 @@ public abstract class Character : MonoBehaviour
     }
 
     protected abstract bool IsMoving();
+
+    public virtual void Die()
+    {
+        Collider2D.isTrigger = true;
+        Rigidbody2D.velocity = Vector2.zero;
+        Rigidbody2D.AddForce(Vector2.up*7.5f,ForceMode2D.Impulse);
+    }
 
 }
