@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Net;
+using UnityEngine;
 
 public class CameraMovementScript : MonoBehaviour
 {
@@ -17,16 +18,20 @@ public class CameraMovementScript : MonoBehaviour
 	    var canControl = PlayerTransform.gameObject.GetComponent<PlayerMovementScript>().CanControl;
 	    var position = _transform.position;
 	    position.x = PlayerTransform.position.x;
-	    if (PlayerTransform.position.y - position.y > MaxVerticalOffset && canControl)
+
+	    if (!(PlayerTransform.position.y < -7.5f))
 	    {
-            position.y += ChangingVerticalPositionPerFrame;
+	        if (PlayerTransform.position.y - position.y > MaxVerticalOffset && canControl)
+	        {
+	            position.y += ChangingVerticalPositionPerFrame;
+	        }
+
+	        if (PlayerTransform.position.y - position.y < -MaxVerticalOffset && canControl)
+	        {
+	            position.y -= ChangingVerticalPositionPerFrame;
+	        }
+
+	        _transform.position = position;
 	    }
-
-        if (PlayerTransform.position.y - position.y < -MaxVerticalOffset && canControl)
-        {
-            position.y -= ChangingVerticalPositionPerFrame;
-        }
-
-        _transform.position = position;
 	}
 }
