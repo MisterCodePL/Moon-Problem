@@ -27,7 +27,8 @@ public class LevelManager : MonoBehaviour
     {
         var levelList = new List<string>
         {
-            "Demo"
+            "Demo",
+            "Level1"
         };
         return levelList;
     }
