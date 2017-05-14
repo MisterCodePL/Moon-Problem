@@ -23,7 +23,6 @@ public class CyclonScript : Character
         {
             BackToDefaultMode();
         }
-        Die();
     }
 
     private void BackToDefaultMode()
@@ -70,4 +69,5 @@ public class CyclonScript : Character
 	{
 	    _deffendModeTime+=Time.fixedDeltaTime;
 	}
+
 }
