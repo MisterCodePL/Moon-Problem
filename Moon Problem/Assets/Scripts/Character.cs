@@ -55,7 +55,7 @@ public abstract class Character : MonoBehaviour
     {
         Collider2D.isTrigger = true;
         Rigidbody2D.velocity = Vector2.zero;
-        Rigidbody2D.AddForce(Vector2.up*7.5f,ForceMode2D.Impulse);
+        Rigidbody2D.AddForce(Vector2.up*4.5f,ForceMode2D.Impulse);
     }
 
 }

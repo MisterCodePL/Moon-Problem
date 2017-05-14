@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
@@ -16,10 +17,16 @@ public class LevelManager : MonoBehaviour
 
     void LateUpdate()
     {
-        var player = FindPlayer();
-        if (IsDeath(player))
+        DestroyDeathGameObject();
+
+    }
+
+    private void DestroyDeathGameObject()
+    {
+        var deathGameObjects = FindAllDeathGameObjects();
+        foreach (var o in deathGameObjects)
         {
-            SceneManager.LoadScene(ActualLevelName);
+            Destroy(o);
         }
     }
 
@@ -40,17 +47,14 @@ public class LevelManager : MonoBehaviour
         return levelName;
     }
 
-    private GameObject FindPlayer()
+    private List<GameObject> FindAllDeathGameObjects()
     {
-        return GameObject.Find("Player");
-    }
-
-    private bool IsDeath(GameObject player)
-    {
-        if (player == null) return true;
-        var playerTransform = player.transform;
-        var playerPosition = playerTransform.position;
-        return playerPosition.y < -7.5f;
+        var list = GameObject.FindGameObjectsWithTag("Enemy").ToList();
+        list.Add(GameObject.Find("Player"));
+        list = list.Select(x => x)
+            .Where(t => t.transform.position.y < -7.5f)
+            .ToList();
+        return list;
     }
 
 }
