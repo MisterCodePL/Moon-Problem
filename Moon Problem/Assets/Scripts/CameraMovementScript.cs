@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using UnityEngine;
 
 public class CameraMovementScript : MonoBehaviour
@@ -15,23 +16,35 @@ public class CameraMovementScript : MonoBehaviour
 
 	void LateUpdate ()
 	{
-	    var canControl = PlayerTransform.gameObject.GetComponent<PlayerMovementScript>().CanControl;
-	    var position = _transform.position;
-	    position.x = PlayerTransform.position.x;
-
-	    if (!(PlayerTransform.position.y < -7.5f))
+	    try
 	    {
-	        if (PlayerTransform.position.y - position.y > MaxVerticalOffset && canControl)
-	        {
-	            position.y += ChangingVerticalPositionPerFrame;
-	        }
-
-	        if (PlayerTransform.position.y - position.y < -MaxVerticalOffset && canControl)
-	        {
-	            position.y -= ChangingVerticalPositionPerFrame;
-	        }
-
-	        _transform.position = position;
+	        FollowCamera();
+        }
+	    catch (MissingReferenceException)
+	    {
+	        ;
 	    }
 	}
+
+    private void FollowCamera()
+    {
+        var canControl = PlayerTransform.gameObject.GetComponent<PlayerMovementScript>().CanControl;
+        var position = _transform.position;
+        position.x = PlayerTransform.position.x;
+
+        if (!(PlayerTransform.position.y < -7.5f))
+        {
+            if (PlayerTransform.position.y - position.y > MaxVerticalOffset && canControl)
+            {
+                position.y += ChangingVerticalPositionPerFrame;
+            }
+
+            if (PlayerTransform.position.y - position.y < -MaxVerticalOffset && canControl)
+            {
+                position.y -= ChangingVerticalPositionPerFrame;
+            }
+
+            _transform.position = position;
+        }
+    }
 }
