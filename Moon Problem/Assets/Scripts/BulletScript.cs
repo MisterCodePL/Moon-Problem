@@ -7,7 +7,7 @@ public class BulletScript : MonoBehaviour {
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.tag=="Player")
-            collision.gameObject.GetComponent<PlayerMovementScript>().Die();
+            collision.gameObject.GetComponent<Character>().Die();
         Destroy(gameObject);
     }
 }

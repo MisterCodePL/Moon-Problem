@@ -27,30 +27,20 @@ public class PlayerMovementScript : Character {
         Jump();
     }
 
-    public void OnCollisionStay2D(Collision2D collision)
+    protected override void OnCollisionStay2D(Collision2D collision)
     {
-
         var collisionDetector = new CollisionDetector(collision);
         if (collisionDetector.CollideOnTheBottom() != null && collisionDetector.CollideOnTheBottom().tag != "Wall")
         {
             _canJump = true;
         }
 
-        if (collision.gameObject.tag == "Respawn")
+        if (collision.gameObject.tag == "Enemy" && collision.gameObject.GetComponent<CyclonScript>()==null)
         {
-            Die();
-        }
-
-        if (collision.gameObject.tag == "Enemy")
-        {
-            if (collisionDetector.CollideOnTheLeft() != null && 
-                collisionDetector.CollideOnTheLeft().gameObject.tag == "Enemy") Die();
-
-            if (collisionDetector.CollideOnTheRight() != null && 
-                collisionDetector.CollideOnTheRight().gameObject.tag == "Enemy") Die();
-
-            if (collisionDetector.CollideOnTheTop() != null && 
-                collisionDetector.CollideOnTheTop().gameObject.tag == "Enemy") Die();
+            if (collisionDetector.CollideOnTheBottom()!=null)
+            {
+                collision.gameObject.GetComponent<Character>().Die();
+            }
         }
     }
 

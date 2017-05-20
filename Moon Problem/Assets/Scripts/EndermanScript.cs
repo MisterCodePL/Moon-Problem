@@ -31,16 +31,6 @@ public class EndermanScript : Character
         }
     }
 
-    public void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            var collisionDetector = new CollisionDetector(collision);
-            if (collisionDetector.CollideOnTheTop() != null &&
-                collisionDetector.CollideOnTheTop().gameObject.tag == "Player") Die();
-        }
-    }
-
     public void Update()
     {
         _actualReloadTime += Time.fixedDeltaTime;

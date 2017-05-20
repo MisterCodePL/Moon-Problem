@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices;
+using UnityEngine;
 
 public class CyclonScript : Character
 {
@@ -41,10 +42,22 @@ public class CyclonScript : Character
             if (collisionDetector.CollideOnTheRight() != null &&
                 collisionDetector.CollideOnTheRight().gameObject.tag == "Wall") Flip();
         }
+
+        if (collision.gameObject.tag == "Player")
+        {
+            var collisionDetector = new CollisionDetector(collision);
+            if (collisionDetector.CollideOnTheRight() != null
+                || collisionDetector.CollideOnTheLeft() != null
+                || collisionDetector.CollideOnTheBottom() != null)
+            {
+                collision.gameObject.GetComponent<Character>().Die();
+            }
+        }
     }
 
-    public void OnCollisionStay2D(Collision2D collision)
+    protected override void OnCollisionStay2D(Collision2D collision)
     {
+        base.OnCollisionStay2D(collision);
         if (collision.gameObject.tag == "Player")
         {
             var collisionDetector = new CollisionDetector(collision);
@@ -52,7 +65,6 @@ public class CyclonScript : Character
                 collisionDetector.CollideOnTheTop().gameObject.tag == "Player") DeffendMove();
         }
     }
-
     private void DeffendMove()
     {
         _spriteRenderer.sprite = DeffendSprite;

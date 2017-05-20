@@ -58,4 +58,18 @@ public abstract class Character : MonoBehaviour
         Rigidbody2D.AddForce(Vector2.up*4.5f,ForceMode2D.Impulse);
     }
 
+    protected virtual void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            var collisionDetector = new CollisionDetector(collision);
+            if (collisionDetector.CollideOnTheRight() != null
+                || collisionDetector.CollideOnTheLeft() != null
+                || collisionDetector.CollideOnTheBottom() != null)
+            {
+                collision.gameObject.GetComponent<Character>().Die();
+            }
+        }
+    }
+
 }
