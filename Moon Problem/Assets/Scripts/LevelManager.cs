@@ -9,11 +9,13 @@ public class LevelManager : MonoBehaviour
 {
     public string ActualLevelName { get; private set; }
     public List<string> LevelList { get; private set; }
+    public Collider2D Collider2D { get; private set; }
 
     void Start()
     {
         LevelList = GetLevelList();
         ActualLevelName = GetActualLevelName();
+        Collider2D = GetComponent<Collider2D>();
     }
 
     void LateUpdate()
@@ -72,6 +74,27 @@ public class LevelManager : MonoBehaviour
             ;
         }
         return list;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        SceneManager.LoadScene(LevelList[NextLevelIndex()]);
+    }
+
+    private int NextLevelIndex()
+    {
+        int index = ActualLevelIndex() + 1;
+        if (index >= LevelList.Count) index = 0;
+        return index;
+    }
+
+    private int ActualLevelIndex()
+    {
+        for (int i = 0; i < LevelList.Count; i++)
+        {
+            if (LevelList[i] == ActualLevelName) return i;
+        }
+        return 0;
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class EndermanScript : Character
 {
@@ -16,17 +17,25 @@ public class EndermanScript : Character
 
     public void Update()
     {
-        _actualReloadTime += Time.fixedDeltaTime;
-        if (_actualReloadTime >= ReloadTime && !Collider2D.isTrigger && IsPlayerInFrontOf())
+        try
         {
-            _actualReloadTime = 0;
-            var bullet = (GameObject)Instantiate(
-                BulletPrefab,
-                StartingBooletPosition(), Transform.rotation);
+            _actualReloadTime += Time.fixedDeltaTime;
+            if (_actualReloadTime >= ReloadTime && !Collider2D.isTrigger && IsPlayerInFrontOf())
+            {
+                _actualReloadTime = 0;
+                var bullet = (GameObject)Instantiate(
+                    BulletPrefab,
+                    StartingBooletPosition(), Transform.rotation);
 
-            bullet.GetComponent<Rigidbody2D>().velocity = GetBulletForce(bullet);
-            Destroy(bullet, 2.0f);
+                bullet.GetComponent<Rigidbody2D>().velocity = GetBulletForce(bullet);
+                Destroy(bullet, 2.0f);
+            }
         }
+        catch (Exception)
+        {
+            ;
+        }
+        
     }
 
     private Vector3 StartingBooletPosition()
