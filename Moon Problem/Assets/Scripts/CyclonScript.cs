@@ -32,29 +32,6 @@ public class CyclonScript : Character
         MovementSpeed = NormalSpeed;
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Wall")
-        {
-            var collisionDetector = new CollisionDetector(collision);
-            if (collisionDetector.CollideOnTheLeft() != null &&
-                collisionDetector.CollideOnTheLeft().gameObject.tag == "Wall") Flip();
-            if (collisionDetector.CollideOnTheRight() != null &&
-                collisionDetector.CollideOnTheRight().gameObject.tag == "Wall") Flip();
-        }
-
-        if (collision.gameObject.tag == "Player")
-        {
-            var collisionDetector = new CollisionDetector(collision);
-            if (collisionDetector.CollideOnTheRight() != null
-                || collisionDetector.CollideOnTheLeft() != null
-                || collisionDetector.CollideOnTheBottom() != null)
-            {
-                collision.gameObject.GetComponent<Character>().Die();
-            }
-        }
-    }
-
     protected override void OnCollisionStay2D(Collision2D collision)
     {
         base.OnCollisionStay2D(collision);
@@ -70,11 +47,6 @@ public class CyclonScript : Character
         _spriteRenderer.sprite = DeffendSprite;
         MovementSpeed = DeffendModeSpeed;
         _deffendModeTime = 0;
-    }
-
-    protected override bool IsMoving()
-    {
-        return true;
     }
 
     public void Update()

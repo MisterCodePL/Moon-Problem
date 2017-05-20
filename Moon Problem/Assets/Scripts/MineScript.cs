@@ -61,13 +61,14 @@ public class MineScript : MonoBehaviour
         if (_actualTimeToDetonate >= TimeToDetonate)
         {
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(_rigidbody2D.transform.position, 2.5f)
-                .Where(t => t.tag=="Player" || t.tag=="Enemy")
+                .Where(t => t.GetComponent<Character>()!=null)
                 .ToArray();
             
             foreach (var o in hitColliders)
             {
-                Destroy(o.gameObject);
+                o.GetComponent<Character>().Die();
             }
+            Destroy(gameObject);
         }
     }
 }

@@ -14,23 +14,6 @@ public class EndermanScript : Character
         _player = GameObject.Find("Player");
     }
 
-    protected override bool IsMoving()
-    {
-        return true;
-    }
-
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Wall")
-        {
-            var collisionDetector = new CollisionDetector(collision);
-            if (collisionDetector.CollideOnTheLeft() != null &&
-                collisionDetector.CollideOnTheLeft().gameObject.tag == "Wall") Flip();
-            if (collisionDetector.CollideOnTheRight() != null &&
-                collisionDetector.CollideOnTheRight().gameObject.tag == "Wall") Flip();
-        }
-    }
-
     public void Update()
     {
         _actualReloadTime += Time.fixedDeltaTime;

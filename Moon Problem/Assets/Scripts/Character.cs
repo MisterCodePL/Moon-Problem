@@ -49,7 +49,10 @@ public abstract class Character : MonoBehaviour
         return Transform.localScale.x > 0;
     }
 
-    protected abstract bool IsMoving();
+    protected virtual bool IsMoving()
+    {
+        return true;
+    }
 
     public virtual void Die()
     {
@@ -69,6 +72,20 @@ public abstract class Character : MonoBehaviour
             {
                 collision.gameObject.GetComponent<Character>().Die();
             }
+        }
+    }
+
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall" || collision.gameObject.tag=="Enemy")
+        {
+            var collisionDetector = new CollisionDetector(collision);
+            if (collisionDetector.CollideOnTheLeft() != null &&
+                (collisionDetector.CollideOnTheLeft().gameObject.tag == "Wall"
+                || collisionDetector.CollideOnTheLeft().gameObject.tag=="Enemy")) Flip();
+            if (collisionDetector.CollideOnTheRight() != null &&
+                (collisionDetector.CollideOnTheRight().gameObject.tag == "Wall"
+                || collisionDetector.CollideOnTheRight().gameObject.tag == "Enemy")) Flip();
         }
     }
 
