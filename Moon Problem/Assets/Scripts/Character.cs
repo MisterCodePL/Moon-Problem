@@ -65,13 +65,7 @@ public abstract class Character : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            var collisionDetector = new CollisionDetector(collision);
-            if (collisionDetector.CollideOnTheRight() != null
-                || collisionDetector.CollideOnTheLeft() != null
-                || collisionDetector.CollideOnTheBottom() != null)
-            {
-                collision.gameObject.GetComponent<Character>().Die();
-            }
+            IfRightConditionsDie(collision);
         }
     }
 
@@ -79,13 +73,29 @@ public abstract class Character : MonoBehaviour
     {
         if (collision.gameObject.tag == "Wall" || collision.gameObject.tag=="Enemy")
         {
-            var collisionDetector = new CollisionDetector(collision);
-            if (collisionDetector.CollideOnTheLeft() != null &&
-                (collisionDetector.CollideOnTheLeft().gameObject.tag == "Wall"
-                || collisionDetector.CollideOnTheLeft().gameObject.tag=="Enemy")) Flip();
-            if (collisionDetector.CollideOnTheRight() != null &&
-                (collisionDetector.CollideOnTheRight().gameObject.tag == "Wall"
-                || collisionDetector.CollideOnTheRight().gameObject.tag == "Enemy")) Flip();
+            IfRightConditionsFlip(collision);
+        }
+    }
+
+    protected void IfRightConditionsFlip(Collision2D collision)
+    {
+        var collisionDetector = new CollisionDetector(collision);
+        if (collisionDetector.CollideOnTheLeft() != null &&
+            (collisionDetector.CollideOnTheLeft().gameObject.tag == "Wall"
+             || collisionDetector.CollideOnTheLeft().gameObject.tag == "Enemy")) Flip();
+        if (collisionDetector.CollideOnTheRight() != null &&
+            (collisionDetector.CollideOnTheRight().gameObject.tag == "Wall"
+             || collisionDetector.CollideOnTheRight().gameObject.tag == "Enemy")) Flip();
+    }
+
+    protected void IfRightConditionsDie(Collision2D collision)
+    {
+        var collisionDetector = new CollisionDetector(collision);
+        if (collisionDetector.CollideOnTheRight() != null
+            || collisionDetector.CollideOnTheLeft() != null
+            || collisionDetector.CollideOnTheBottom() != null)
+        {
+            collision.gameObject.GetComponent<Character>().Die();
         }
     }
 

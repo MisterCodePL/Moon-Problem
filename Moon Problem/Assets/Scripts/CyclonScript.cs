@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class CyclonScript : Character
@@ -32,6 +33,15 @@ public class CyclonScript : Character
         MovementSpeed = NormalSpeed;
     }
 
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Wall" 
+            || collision.gameObject.tag == "Enemy" && !IsInDeffendMode())
+        {
+            IfRightConditionsFlip(collision);
+        }
+    }
+
     protected override void OnCollisionStay2D(Collision2D collision)
     {
         base.OnCollisionStay2D(collision);
@@ -40,6 +50,10 @@ public class CyclonScript : Character
             var collisionDetector = new CollisionDetector(collision);
             if (collisionDetector.CollideOnTheTop() != null && 
                 collisionDetector.CollideOnTheTop().gameObject.tag == "Player") DeffendMove();
+        }
+        if (collision.gameObject.tag == "Enemy" && IsInDeffendMode())
+        {
+            IfRightConditionsDie(collision);
         }
     }
     private void DeffendMove()
@@ -53,5 +67,10 @@ public class CyclonScript : Character
 	{
 	    _deffendModeTime+=Time.fixedDeltaTime;
 	}
+
+    private bool IsInDeffendMode()
+    {
+        return Math.Abs(MovementSpeed - DeffendModeSpeed) < 0.1f;
+    }
 
 }
