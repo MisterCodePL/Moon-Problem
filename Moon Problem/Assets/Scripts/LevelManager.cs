@@ -78,7 +78,8 @@ public class LevelManager : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        SceneManager.LoadScene(LevelList[NextLevelIndex()]);
+        if(collision.gameObject.CompareTag("Player"))
+            SceneManager.LoadScene(LevelList[NextLevelIndex()]);
     }
 
     private int NextLevelIndex()
