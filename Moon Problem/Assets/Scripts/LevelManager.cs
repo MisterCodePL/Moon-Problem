@@ -81,10 +81,15 @@ public class LevelManager : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             int nextLevelIndex = NextLevelIndex();
-            if(nextLevelIndex==-1) SceneManager.LoadScene("MainMenu");
-            SceneManager.LoadScene(LevelList[NextLevelIndex()]);
+            SceneManager.LoadScene(GetSceneName(nextLevelIndex));
         }
             
+    }
+
+    private string GetSceneName(int index)
+    {
+        if (index == -1) return "MainMenu";
+        return LevelList[index];
     }
 
     private int NextLevelIndex()
