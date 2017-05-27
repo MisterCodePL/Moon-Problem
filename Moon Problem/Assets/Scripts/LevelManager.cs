@@ -78,14 +78,19 @@ public class LevelManager : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            int nextLevelIndex = NextLevelIndex();
+            if(nextLevelIndex==-1) SceneManager.LoadScene("MainMenu");
             SceneManager.LoadScene(LevelList[NextLevelIndex()]);
+        }
+            
     }
 
     private int NextLevelIndex()
     {
         int index = ActualLevelIndex() + 1;
-        if (index >= LevelList.Count) index = 0;
+        if (index >= LevelList.Count) return -1;
         return index;
     }
 
