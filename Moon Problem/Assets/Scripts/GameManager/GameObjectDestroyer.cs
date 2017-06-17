@@ -5,6 +5,8 @@ using UnityEngine;
 
 class GameObjectDestroyer : MonoBehaviour
 {
+
+
     void LateUpdate()
     {
         DestroyDeathGameObject();

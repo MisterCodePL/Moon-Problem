@@ -5,19 +5,19 @@ using UnityEngine.UI;
 
 public class RocksCounter : MonoBehaviour
 {
-    private int _rocks;
+    public int Rocks { get; private set; }
     private Text _text;
 
     private void Start()
     {
-        _rocks = 0;
+        Rocks = 0;
         _text = GetComponentInChildren<Text>();
     }
 
     public void AddRock()
     {
-        _rocks++;
-        _text.text = _rocks.ToString();
+        Rocks++;
+        _text.text = Rocks.ToString();
     }
 
 

@@ -6,25 +6,25 @@ using UnityEngine.UI;
 public class TimeCounter : MonoBehaviour
 {
     private Text _text;
-    private float _timeInSeconds;
+    public TimeContainer time { get; private set; }
 
 
     private void Start()
     {
         _text = GetComponentInChildren<Text>();
-        _timeInSeconds = 0;
+        time = new TimeContainer(0);
     }
 
     private void FixedUpdate()
     {
-        _timeInSeconds += Time.fixedDeltaTime;
+        time.AddSeconds(Time.fixedDeltaTime);
         UpdateDisplayClock();
     }
 
     private void UpdateDisplayClock()
     {
-        int minutes = (int)(_timeInSeconds / 60);
-        int seconds = (int)_timeInSeconds - minutes * 60;
+        int minutes = time.Minutes;
+        int seconds = time.Seconds;
         string secondsText = seconds.ToString();
         if (seconds < 10) secondsText = "0" + seconds;
         _text.text = minutes + ":" + secondsText;
