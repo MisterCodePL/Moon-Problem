@@ -8,7 +8,7 @@ public class TimeLabel : MonoBehaviour
     void Start()
     {
         text = GetComponent<Text>();
-        TimeContainer time = GameObject.Find("DataContainer").GetComponent<DataContainer>().timeContainer;
+        TimeContainer time = DataContainer.Instance.timeContainer;
         text.text = "Time: " + time.Minutes+":"+time.Seconds;
     }
 }

@@ -22,6 +22,7 @@ public abstract class Character : MonoBehaviour
         Move();
     }
 
+
     protected void Flip()
     {
         FacingRight = !FacingRight;

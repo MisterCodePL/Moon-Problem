@@ -8,6 +8,6 @@ public class RocksLabel : MonoBehaviour {
 	void Start ()
     {
         text = GetComponent<Text>();
-        text.text = "Rocks: " + GameObject.Find("DataContainer").GetComponent<DataContainer>().Rocks.ToString();
+        text.text = "Rocks: " + DataContainer.Instance.Rocks.ToString();
 	}
 }

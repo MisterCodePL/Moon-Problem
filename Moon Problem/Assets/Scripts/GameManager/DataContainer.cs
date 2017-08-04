@@ -10,16 +10,16 @@ class DataContainer : MonoBehaviour
     public TimeContainer timeContainer { get; private set; }
     public string LevelName { get; private set; }
 
-    public static DataContainer dataContainer;
+    public static DataContainer Instance;
 
     private void Awake()
     {
-        if (dataContainer == null)
+        if (Instance == null)
         {
             DontDestroyOnLoad(gameObject);
-            dataContainer = this;
+            Instance = this;
         }
-        else if (dataContainer != this)
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }

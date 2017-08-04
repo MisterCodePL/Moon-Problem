@@ -9,7 +9,7 @@ public class ScoreLabel : MonoBehaviour
     void Start()
     {
         text = GetComponent<Text>();
-        DataContainer data = GameObject.Find("DataContainer").GetComponent<DataContainer>();
+        DataContainer data = DataContainer.Instance;
         float seconds = data.timeContainer.AllSeconds;
         int rocks = data.Rocks;
         int score = (int)Math.Ceiling((rocks / seconds) * 100);
