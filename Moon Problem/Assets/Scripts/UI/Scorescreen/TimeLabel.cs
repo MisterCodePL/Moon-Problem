@@ -9,6 +9,6 @@ public class TimeLabel : MonoBehaviour
     {
         text = GetComponent<Text>();
         TimeContainer time = DataContainer.Instance.timeContainer;
-        text.text = "Time: " + time.Minutes+":"+time.Seconds;
+        text.text = "Time: " + time.Minutes+":"+time.Seconds.ToString().PadLeft(2,'0');
     }
 }
