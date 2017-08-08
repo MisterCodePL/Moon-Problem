@@ -24,8 +24,8 @@ public class Activator : MonoBehaviour
             _enemies.Add(o);
         }
         _enemies = _enemies.Where(o => o.tag == "Enemy")
-            .Where(o => o.activeSelf==false)
-            .ToList();
+           .Where(o => o.activeSelf==false)
+           .ToList();
     }
 
     private void Update()

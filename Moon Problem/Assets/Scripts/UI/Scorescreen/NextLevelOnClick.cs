@@ -10,7 +10,7 @@ public class NextLevelOnClick : MonoBehaviour {
         List<string>  levelList = new List<string>
         {
             "Level1",
-            "Demo"
+            "Level2"
         };
         string actualLevel = GameObject.Find("DataContainer").GetComponent<DataContainer>().LevelName;
         ChangeToNextLevel(levelList, actualLevel);

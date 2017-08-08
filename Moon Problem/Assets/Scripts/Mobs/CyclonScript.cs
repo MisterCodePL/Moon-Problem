@@ -16,6 +16,7 @@ public class CyclonScript : Character
         base.Start();
         MovementSpeed = NormalSpeed;
         _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        gameObject.SetActive(false);
     }
 
     public override void FixedUpdate()
